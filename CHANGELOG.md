@@ -1,5 +1,9 @@
 # Changelog for *TopoBank*
 
+## 1.53.4 (To be released)
+
+- FIX: Copy attachments and properties when publishing a DST
+
 ## 1.52.3 (2024-12-09)
 
 - MAINT: Allow allauth headless mode

@@ -84,6 +84,19 @@ class Folder(PermissionMixin, models.Model):
         """Clear this folder by removing all files"""
         self.files.all().delete()
 
+    def deepcopy(self, permissions=None):
+        copy = Folder.objects.get(pk=self.pk)
+        copy.pk = None
+        # TODO: handle permissions
+        copy.save()
+
+        for filemanifest in self.get_valid_files():
+            filemanifest_copy = filemanifest.deepcopy()
+            filemanifest_copy.folder = copy
+            filemanifest_copy.save()
+
+        return copy
+
 
 # The Flow for "direct file upload" is heavily inspired from here:
 # https://www.hacksoft.io/blog/direct-to-s3-file-upload-with-django
@@ -294,7 +307,8 @@ class Manifest(PermissionMixin, models.Model):
             # it does not support absolute paths if we use this method.
             try:
                 storage_path = default_storage._normalize_name(
-                    self.generate_storage_path())
+                    self.generate_storage_path()
+                )
             except SuspiciousFileOperation:
                 # This happens after migrations, when the file name is not yet set
                 _log.info(

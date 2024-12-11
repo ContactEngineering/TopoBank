@@ -109,6 +109,25 @@ class Property(PermissionMixin, models.Model):
             self.permissions = self.surface.permissions
         super().save(*args, **kwargs)
 
+    def deepcopy(self, to_surface):
+        """Creates a copy of this property.
+
+        Parameters
+        ----------
+        to_surface: Surface
+            target surface
+
+        Returns
+        -------
+        The copied property.
+
+        """
+        copy = Property.objects.get(pk=self.pk)
+        copy.pk = None
+        copy.surface = to_surface
+        copy.permissions = to_surface.permissions
+        copy.save()
+
     @property
     def is_numerical(self):
         return self.value_numerical is not None
