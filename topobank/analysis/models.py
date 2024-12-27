@@ -412,7 +412,7 @@ class AnalysisFunction(models.Model):
     SQL database.
     """
 
-    name = models.CharField(
+    display_name = models.CharField(
         max_length=80, help_text="A human-readable name.", unique=True
     )
 
